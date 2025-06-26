@@ -12,18 +12,29 @@ const fallbackPredict = async (message) => {
 
 const parseExpense = async (message) => {
   try {
-    const prompt = `
-Extract the amount, category, date, and note from this expense message:
-"${message}"
 
-Respond only in this JSON format:
+const prompt = `
+You are an intelligent financial assistant. Your task is to extract structured expense information from a user's natural language message.
+
+🔹 Rules:
+- "category" should be a **general category** such as: "Food", "Transport", "Health", "Shopping", "Groceries", "Rent", "Entertainment", "Bills", "Utilities", "Travel", or "Others". **Do not use brand/vendor names** like "Uber", "Zomato", or "Amazon" as categories.
+- If a date is not mentioned, set it to **"unknown"**.
+- Keep the "note" short and meaningful. Do **not** repeat the category or amount in it.
+
+📌 Output must be in this **strict JSON format**:
 {
   "amount": number,
   "category": "string",
-  "date": "ISO 8601 format",
+  "date": "ISO 8601 format or 'unknown'",
   "note": "string"
 }
+
+📥 Message: 
+"${message}"
+
+Respond only with the JSON. Do not include any explanation or extra text.
 `;
+
 
     const res = await axios.post(
       "https://api.groq.com/openai/v1/chat/completions",

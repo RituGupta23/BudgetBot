@@ -1,5 +1,5 @@
-const Expense = require('../models/Expense');
-const { parseExpense } = require('../utils/groqParser');
+const Expense = require("../models/Expense");
+const { parseExpense } = require("../utils/groqParser");
 
 // @desc    Add a new expense (protected)
 // @route   POST /api/expenses/create
@@ -8,20 +8,26 @@ const addExpense = async (req, res) => {
   try {
     const { amount, category, note, date, source } = req.body;
 
+    // Fallback to current date if 'date' is missing or invalid
+    const dateToUse =
+      !date || date === "unknown" || isNaN(Date.parse(date))
+        ? new Date()
+        : new Date(date);
+
     const newExpense = new Expense({
-      userId: req.user._id, // pulled from JWT middleware
+      userId: req.user._id,
       amount,
       category,
       note,
-      date,
-      source: source || 'web'
+      date: dateToUse,
+      source: source || "web",
     });
 
     await newExpense.save();
     res.status(201).json(newExpense);
   } catch (err) {
     console.error("Error adding expense:", err.message);
-    res.status(500).json({ error: 'Failed to add expense' });
+    res.status(500).json({ error: "Failed to add expense" });
   }
 };
 
@@ -30,11 +36,13 @@ const addExpense = async (req, res) => {
 // @access  Private
 const getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find({ userId: req.user._id }).sort({ date: -1 });
+    const expenses = await Expense.find({ userId: req.user._id }).sort({
+      date: -1,
+    });
     res.status(200).json(expenses);
   } catch (err) {
     console.error("Error fetching expenses:", err.message);
-    res.status(500).json({ error: 'Failed to fetch expenses' });
+    res.status(500).json({ error: "Failed to fetch expenses" });
   }
 };
 
@@ -48,11 +56,11 @@ const parserExpense = async (req, res) => {
     if (parsed) {
       res.json(parsed);
     } else {
-      res.status(500).json({ error: 'Parsing failed' });
+      res.status(500).json({ error: "Parsing failed" });
     }
   } catch (err) {
     console.error("Parsing error:", err.message);
-    res.status(500).json({ error: 'Parsing error occurred' });
+    res.status(500).json({ error: "Parsing error occurred" });
   }
 };
 
