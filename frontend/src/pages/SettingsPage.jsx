@@ -318,60 +318,7 @@ const SettingsPage = () => {
               </div>
             </div>
 
-            {/* Notification Settings */}
-            <div className="bg-[#FFFBF5] rounded-2xl shadow-lg border border-[#F7EFE5] p-8">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
-                  <Bell className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">Notification Preferences</h2>
-                  <p className="text-sm text-gray-600">Choose how you want to receive updates</p>
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    key: "email",
-                    title: "Email Notifications",
-                    description: "Receive weekly expense summaries via email",
-                  },
-                  {
-                    key: "whatsapp",
-                    title: "WhatsApp Confirmations",
-                    description: "Get confirmation messages when expenses are tracked",
-                  },
-                  {
-                    key: "weekly",
-                    title: "Weekly Reports",
-                    description: "Receive detailed weekly spending reports",
-                  },
-                ].map((setting) => (
-                  <div
-                    key={setting.key}
-                    className="flex items-center justify-between p-4 border border-[#F7EFE5] rounded-xl hover:bg-[#F7EFE5] transition-all"
-                  >
-                    <div>
-                      <p className="text-base font-semibold text-gray-900">{setting.title}</p>
-                      <p className="text-sm text-gray-600">{setting.description}</p>
-                    </div>
-                    <button
-                      onClick={() => setNotifications({ ...notifications, [setting.key]: !notifications[setting.key] })}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        notifications[setting.key] ? "bg-[#7743DB]" : "bg-gray-300"
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          notifications[setting.key] ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+            
           </div>
 
           {/* Right Column - Account Stats & Actions */}
@@ -426,23 +373,72 @@ const SettingsPage = () => {
                 </button>
 
                 <button className="w-full flex items-center justify-between p-3 text-left border border-[#F7EFE5] rounded-xl hover:bg-[#F7EFE5] transition-all">
-                  <span className="text-sm font-medium text-gray-900">Export Data</span>
-                  <ExternalLink className="w-4 h-4 text-gray-400" />
-                </button>
-
-                <button className="w-full flex items-center justify-between p-3 text-left border border-[#F7EFE5] rounded-xl hover:bg-[#F7EFE5] transition-all">
                   <span className="text-sm font-medium text-gray-900">Delete Account</span>
                   <X className="w-4 h-4 text-red-500" />
                 </button>
               </div>
             </div>
 
+            {/* Notification Settings */}
+            <div className="bg-[#FFFBF5] rounded-2xl shadow-lg border border-[#F7EFE5] p-8">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-md">
+                  <Bell className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">Notification Preferences</h2>
+                  <p className="text-sm text-gray-600">Choose how you want to receive updates</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  {
+                    key: "email",
+                    title: "Email Notifications",
+                    description: "Receive weekly expense summaries via email",
+                  },
+                  {
+                    key: "whatsapp",
+                    title: "WhatsApp Confirmations",
+                    description: "Get confirmation messages when expenses are tracked",
+                  },
+                  {
+                    key: "weekly",
+                    title: "Weekly Reports",
+                    description: "Receive detailed weekly spending reports",
+                  },
+                ].map((setting) => (
+                  <div
+                    key={setting.key}
+                    className="flex items-center justify-between p-4 border border-[#F7EFE5] rounded-xl hover:bg-[#F7EFE5] transition-all"
+                  >
+                    <div className="md:w-[78%]">
+                      <p className="text-base font-semibold text-gray-900">{setting.title}</p>
+                      <p className="text-sm text-gray-600">{setting.description}</p>
+                    </div>
+                    <button
+                      onClick={() => setNotifications({ ...notifications, [setting.key]: !notifications[setting.key] })}
+                      className={`relative inline-flex h-6 w-11 md:w-[22%] items-center rounded-full transition-colors ${
+                        notifications[setting.key] ? "bg-[#7743DB]" : "bg-gray-300"
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          notifications[setting.key] ? "translate-x-6" : "translate-x-1"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Account Actions */}
-            <div className="bg-[#FFFBF5] rounded-2xl shadow-lg border border-[#F7EFE5] p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Account Actions</h3>
+            <div className="bg-[#FFFBF5] rounded-2xl shadow-lg border border-[#F7EFE5] p-2">
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center px-6 py-3 border border-red-300 rounded-xl text-red-700 hover:bg-red-50 hover:border-red-400 transition-all font-medium"
+                className="w-full flex items-center justify-center px-4 py-2 border border-red-300 rounded-xl text-red-700 hover:bg-red-50 hover:border-red-400 transition-all font-medium"
               >
                 <LogOut className="w-5 h-5 mr-2" />
                 Sign Out

@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react"
-import { Calendar, IndianRupee, Tag, Filter, Search, SortAsc, SortDesc, X } from "lucide-react"
+import { Calendar, IndianRupee, Tag, Filter, Search, SortAsc, SortDesc, X, Download } from "lucide-react"
 import CustomDropdown from "./CustomDropdown"
 import CustomDatePicker from "./CustomDatePicker"
+import Papa from "papaparse"
 
 const ExpenseList = ({ expenses, loading }) => {
   const [filterCategory, setFilterCategory] = useState("")
@@ -25,7 +26,6 @@ const ExpenseList = ({ expenses, loading }) => {
       return categoryMatch && dateMatch && searchMatch
     })
 
-    // Sort by amount
     filtered.sort((a, b) => {
       return sortOrder === "desc" ? b.amount - a.amount : a.amount - b.amount
     })
@@ -58,6 +58,25 @@ const ExpenseList = ({ expenses, loading }) => {
       Utilities: "bg-green-100 text-green-800",
     }
     return colors[category] || "bg-gray-100 text-gray-800"
+  }
+
+  const exportToCSV = () => {
+    const data = filteredExpenses.map(({ note, category, date, amount }) => ({
+      Note: note || "Expense",
+      Category: category,
+      Date: formatDate(date),
+      Amount: amount,
+    }))
+
+    const csv = Papa.unparse(data)
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.setAttribute("href", url)
+    link.setAttribute("download", "expenses.csv")
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 
   if (loading) {
@@ -99,7 +118,7 @@ const ExpenseList = ({ expenses, loading }) => {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
-          {/* Enhanced Search */}
+          {/* Search Input */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C3ACD0] w-4 h-4" />
             <input
@@ -119,7 +138,7 @@ const ExpenseList = ({ expenses, loading }) => {
             )}
           </div>
 
-          {/* Enhanced Category Dropdown */}
+          {/* Category Dropdown */}
           <CustomDropdown
             value={filterCategory}
             onChange={setFilterCategory}
@@ -128,10 +147,10 @@ const ExpenseList = ({ expenses, loading }) => {
             icon={<Filter className="w-4 h-4" />}
           />
 
-          {/* Enhanced Date Picker */}
+          {/* Date Picker */}
           <CustomDatePicker value={filterDate} onChange={setFilterDate} placeholder="Filter by date" />
 
-          {/* Enhanced Sort Button */}
+          {/* Sort Button */}
           <button
             onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}
             className="flex items-center px-4 py-3 border border-[#C3ACD0] rounded-xl text-sm font-medium text-[#7743DB] bg-[#FFFBF5] hover:bg-[#F7EFE5] hover:border-[#7743DB] transition-all shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
@@ -139,9 +158,19 @@ const ExpenseList = ({ expenses, loading }) => {
             {sortOrder === "desc" ? <SortDesc className="w-4 h-4 mr-2" /> : <SortAsc className="w-4 h-4 mr-2" />}
             Amount
           </button>
+
+          {/* Export Button */}
+          <button
+            onClick={exportToCSV}
+            className="flex items-center px-4 py-3 border border-[#C3ACD0] rounded-xl text-sm font-medium text-[#7743DB] bg-[#FFFBF5] hover:bg-[#F7EFE5] hover:border-[#7743DB] transition-all shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export CSV
+          </button>
         </div>
       </div>
 
+      {/* No expenses */}
       {filteredExpenses.length === 0 ? (
         <div className="text-center py-16">
           <div className="w-16 h-16 bg-[#F7EFE5] rounded-2xl flex items-center justify-center mx-auto mb-4">
