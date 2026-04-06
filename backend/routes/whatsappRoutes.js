@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/webhook', async (req, res) => {
   const message = req.body.Body;
-  const from = req.body.From; // e.g., "whatsapp:+918588023759"
+  const from = req.body.From; // e.g., "whatsapp:+910000000000"
   console.log("Incoming from:", from, "Message:", message);
 
   try {
